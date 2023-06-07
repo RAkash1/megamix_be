@@ -86,9 +86,8 @@ const getPost =async (req,res) => {
       await Post.find()
         .populate('author', ['username'])
         .sort({createdAt: -1})
-        .limit(20)
     );
-  }
+}
 const getPostDetails =async (req,res) => {
     console.log(req.params.id);
     res.json( await Post.findById(req.params.id).populate('author', ['username']))
@@ -111,4 +110,37 @@ const deletePost =async (req,res) => {
         console.log(responce);
         res.status(200).json(responce);
 }
-module.exports={registerUser,loginUser,logoutUser,getUser,createpost,getPost,getPostDetails,userProfile,deletePost}
+const editpost =async (req,res) => {
+    let newPath = null;
+    if (req.file) {
+        const {originalname,path} = req.file;
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        newPath = path+'.'+ext;
+        fs.renameSync(path, newPath);
+    }
+
+    const {token} = req.cookies;
+    jwt.verify(token, 'secretkey', {}, async (err,info) => {
+        if (err) throw err;
+        const id = req.params.id;
+        const {title,summary,content} = req.body;
+        const postDoc = await Post.findById(id);
+        const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+        if (!isAuthor) {
+        return res.status(400).json('you are not the author');
+        }
+        console.log(postDoc);
+        await postDoc.updateOne({
+        title,
+        summary,
+        content,
+        cover: newPath ? newPath : postDoc.cover,
+        });
+
+        res.json(postDoc);
+    });
+}
+
+
+module.exports={registerUser,loginUser,logoutUser,getUser,createpost,getPost,getPostDetails,userProfile,deletePost,editpost}
