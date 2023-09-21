@@ -60,27 +60,28 @@ const getUser = (req, res) => {
 };
 
 const createpost = async (req, res) => {
-  // console.log(req.file);
+  console.log(req.file);
   const { originalname, path } = req.file;
   const parts = originalname.split(".");
   const ext = parts[parts.length - 1];
   newPath = path + "." + ext;
-  fs.renameSync(path, newPath);
-  console.log(parts);
-  const { token } = req.cookies;
-  jwt.verify(token, "secretkey", {}, async (err, info) => {
-    console.log(info);
-    if (err) throw err;
-    const { title, summary, content } = req.body;
-    const postDoc = await Post.create({
-      title,
-      summary,
-      content,
-      cover: newPath,
-      author: info.id,
-    });
-    res.json(postDoc);
-  });
+  res.json(newPath);
+  // fs.renameSync(path, newPath);
+  // console.log(parts);
+  // const { token } = req.cookies;
+  // jwt.verify(token, "secretkey", {}, async (err, info) => {
+  //   console.log(info);
+  //   if (err) throw err;
+  //   const { title, summary, content } = req.body;
+  //   const postDoc = await Post.create({
+  //     title,
+  //     summary,
+  //     content,
+  //     cover: newPath,
+  //     author: info.id,
+  //   });
+  //   res.json(postDoc);
+  // });
 };
 
 const getPost = async (req, res) => {
