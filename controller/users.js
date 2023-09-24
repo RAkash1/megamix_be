@@ -3,6 +3,7 @@ const Users = require("../models/users");
 const Post = require("../models/posts");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
+const cloudinary = require("../utils/cloudinary");
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -59,30 +60,55 @@ const getUser = (req, res) => {
   });
 };
 
+// const createpost = async (req, res) => {
+//   console.log(req.file);
+//   const { originalname, path } = req.file;
+//   const parts = originalname.split(".");
+//   const ext = parts[parts.length - 1];
+//   newPath = path + "." + ext;
+//   fs.renameSync(path, newPath);
+//   console.log(parts);
+//   const { token } = req.cookies;
+//   jwt.verify(token, "secretkey", {}, async (err, info) => {
+//     console.log(info);
+//     if (err) throw err;
+//     const { title, summary, content } = req.body;
+//     const postDoc = await Post.create({
+//       title,
+//       summary,
+//       content,
+//       cover: newPath,
+//       author: info.id,
+//     });
+//     res.json(postDoc);
+//   });
+// };
 const createpost = async (req, res) => {
-  console.log(req.file);
-  const { originalname, path } = req.file;
-  const parts = originalname.split(".");
-  const ext = parts[parts.length - 1];
-  newPath = path + "." + ext;
-  res.json(newPath);
-  // fs.renameSync(path, newPath);
-  // console.log(parts);
-  // const { token } = req.cookies;
-  // jwt.verify(token, "secretkey", {}, async (err, info) => {
-  //   console.log(info);
-  //   if (err) throw err;
-  //   const { title, summary, content } = req.body;
-  //   const postDoc = await Post.create({
-  //     title,
-  //     summary,
-  //     content,
-  //     cover: newPath,
-  //     author: info.id,
-  //   });
-  //   res.json(postDoc);
-  // });
-};
+  console.log(req.file.path);
+  const path = req.file.path;
+  try {
+  const result = await cloudinary.uploader.upload(path);
+  console.log(result);
+  const { token } = req.cookies;
+  console.log(token);
+  jwt.verify(token, "secretkey", {}, async (err, info) => {
+    console.log(info);
+    if (err) throw err;
+    const { title, summary, content } = req.body;
+    const postDoc = await Post.create({
+      title,
+      summary,
+      content,
+      cover: result.secure_url,
+      author: info.id,
+    });
+    console.log(postDoc);
+    res.json(postDoc);
+  });
+} catch (e) {console.log(e);}
+
+
+}
 
 const getPost = async (req, res) => {
   console.log(req.cookies);
