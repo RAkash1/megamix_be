@@ -112,6 +112,7 @@ const createpost = async (req, res) => {
 
 const getPost = async (req, res) => {
   console.log(req.cookies);
+  console.log("calling getpost");
   res.json(
     await Post.find().populate("author", ["username"]).sort({ createdAt: -1 })
   );
