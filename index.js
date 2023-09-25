@@ -8,7 +8,7 @@ const upload = require("./middleware/multer");
 
 const app = express();
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin: "*",methods:"*" }));
+app.use(cors({ credentials: true, origin:['http://localhost:3000','*']}));
 app.use(express.json());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 

@@ -55,7 +55,7 @@ const logoutUser = (req, res) => {
 const getUser = (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, "secretkey", (err, info) => {
-    if (err) res.status(400).json(err);
+    if (err) res.status(404).json(err);
     res.json(info);
   });
 };
@@ -113,6 +113,7 @@ const createpost = async (req, res) => {
 const getPost = async (req, res) => {
   console.log(req.cookies);
   console.log("calling getpost");
+  console.log(await Post.find().populate("author", ["username"]).sort({ createdAt: -1 }));
   res.json(
     await Post.find().populate("author", ["username"]).sort({ createdAt: -1 })
   );
