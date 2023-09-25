@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "14.17.3"
+    "node": "v18.14.2"
   },
   "scripts": {
     "start": "nodemon index.js",
