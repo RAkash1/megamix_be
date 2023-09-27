@@ -34,6 +34,7 @@ const loginUser = async (req, res) => {
         { username: userFind.username, email, id: userFind._id },
         "secretkey",
         (err, token) => {
+          console.log(token);
           res
             .cookie("token", token)
             .json({ username: userFind.username, id: userFind._id });
