@@ -37,7 +37,8 @@ const loginUser = async (req, res) => {
           res
             .cookie("token", token)
             .json({ username: userFind.username, id: userFind._id });
-          // console.log(username);
+          console.log(username);
+          console.log(res)
         }
       );
     } else {
