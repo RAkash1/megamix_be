@@ -141,9 +141,6 @@ const deletePost = async (req, res) => {
   // console.log(req.params.id);
   const img = await Post.findById(req.params.id);
   // console.log(img.cover);
-  fs.unlinkSync(img.cover, (err) => {
-    console.log(err);
-  });
   // console.log(img.cover);
   const responce = await Post.findByIdAndDelete(req.params.id);
   // console.log(responce);
