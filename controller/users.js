@@ -59,7 +59,9 @@ const logoutUser = (req, res) => {
   res.cookie("token", "",{ 
     httpOnly: true, 
     secure: true, 
-    sameSite: "None" 
+    sameSite: "None",
+    expires: new Date(0),
+    path: "/",
   }).json("ok");
 };
 
