@@ -40,7 +40,7 @@ const loginUser = async (req, res) => {
             .cookie("token", token, { 
               httpOnly: true, 
               secure: true, 
-              sameSite: "None" 
+              sameSite: "None"
             })
             .json({ username: userFind.username, id: userFind._id });
           console.log(username);
@@ -56,7 +56,11 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-  res.cookie("token", "").json("ok");
+  res.cookie("token", "",{ 
+    httpOnly: true, 
+    secure: true, 
+    sameSite: "None" 
+  }).json("ok");
 };
 
 const getUser = (req, res) => {
