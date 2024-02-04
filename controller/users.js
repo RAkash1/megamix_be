@@ -36,7 +36,11 @@ const loginUser = async (req, res) => {
         (err, token) => {
           console.log(token);
           res
-            .cookie("token", token)
+            .cookie("token", token, { 
+              httpOnly: true, 
+              secure: process.env.NODE_ENV === "production", 
+              sameSite: "None" 
+            })
             .json({ username: userFind.username, id: userFind._id });
           console.log(username);
           console.log(res)
@@ -178,6 +182,19 @@ const editpost = async (req, res) => {
     res.json(postDoc);
   });
 };
+const search =async(req,res)=>{
+  const query = req.params.query;
+  console.log(`search query ${query}`)
+  const title = await Post.find({title:{ $regex: query } }).populate("author",["username"]);
+  const author = await Users .find({username:{ $regex: query }})
+  console.log(author)
+  console.log(title)
+  // console.log(JSON.stringify(result))
+  // console.log(`search result ${result}`)
+
+  res.json(author);
+
+}
 
 module.exports = {
   registerUser,
@@ -190,4 +207,5 @@ module.exports = {
   userProfile,
   deletePost,
   editpost,
+  search
 };

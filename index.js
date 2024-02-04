@@ -8,7 +8,7 @@ const upload = require("./middleware/multer");
 
 const app = express();
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin:['http://localhost:3000','*','https://medium-clone-fe-beta.vercel.app','http://localhost:5173']}));
+app.use(cors({ credentials: true}));
 app.use(express.json());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
@@ -27,6 +27,7 @@ const {
   userProfile,
   deletePost,
   editpost,
+  search
 } = require("./controller/users");
 
 
@@ -47,4 +48,5 @@ app.get("/post/:id", getPostDetails);
 app.get("/profile", userProfile);
 app.delete("/post/:id", deletePost);
 app.put("/post/:id", upload.single("file"), editpost);
+app.get("/search/:query",search);
 app.listen(process.env.PORT , () => console.log("<-------> server is running <------->"));
