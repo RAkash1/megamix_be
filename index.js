@@ -11,7 +11,7 @@ app.use(cookieParser());
 
 const corsOptions = {
   credentials: true,
-  origin: ["https://megamix-green.vercel.app/", "http://localhost:3000", "*"]
+  origin: ["https://megamix-green.vercel.app", "http://localhost:3000", "*"]
 };
 
 app.use(cors(corsOptions));
